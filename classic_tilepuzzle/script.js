@@ -100,7 +100,7 @@ document.addEventListener('DOMContentLoaded', () => {
           renderPuzzle(size);
           if (checkCompletion(size)) {
               clearInterval(timer);
-              alert(`おめでとうございます。\nパズルが完成しました。! 移動数: ${moveCount}, 時間: ${getTimeElapsed()}秒`);
+              alert(`おめでとうございます。\nパズルが完成しました。! \n移動数: ${moveCount}, 時間: ${getTimeElapsed()}秒`);
           }
       }
   }
