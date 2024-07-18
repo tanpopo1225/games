@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Puzzle</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="controls">
+        <label for="difficulty">難易度: </label>
+        <select id="difficulty">
+            <option value="3">3x3</option>
+            <option value="4">4x4</option>
+            <option value="5">5x5</option>
+        </select>
+        <button id="start-button">スタート</button>
+        <button id="random-image-button">ランダム画像</button>
+        <input type="file" id="image-input" accept="image/*">
+        <div id="move-count">移動数: 0</div>
+        <div id="time-elapsed">時間: 0秒</div>
+    </div>
+    <div id="puzzle-container"></div>
+    <img id="original-image" src="" alt="Original Image">
+    <script src="script.js"></script>
+</body>
+</html>

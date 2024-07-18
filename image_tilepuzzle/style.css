@@ -1,0 +1,27 @@
+#puzzle-container {
+  display: grid;
+  gap: 2px;
+  width: 400px;
+  height: 400px;
+  margin: 20px auto;
+  border: 2px solid #333;
+}
+.tile {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  font-size: 24px;
+}
+.empty {
+  background-color: #eee;
+}
+#controls {
+  text-align: center;
+  margin: 20px;
+}
+#original-image {
+  margin: 20px auto 0;
+  max-width: 300px;
+}
