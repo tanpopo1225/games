@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Modern Breakout</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <header class="game-header">
+            <h1 class="game-title">Breakout</h1>
+            <div class="stats-panel">
+                <div class="stat-box">
+                    <span class="icon">🏆</span>
+                    <span id="score">0</span>
+                </div>
+                <div class="stat-box">
+                    <span class="icon">❤️</span>
+                    <span id="lives">3</span>
+                </div>
+            </div>
+        </header>
+
+        <main class="game-board-wrapper">
+            <canvas id="game-canvas" width="400" height="500"></canvas>
+            <div id="start-screen" class="overlay">
+                <div class="message-box">
+                    <h2>Ready?</h2>
+                    <p class="instruction">Tap or Press Space to Start</p>
+                </div>
+            </div>
+            <div id="game-over-screen" class="overlay hidden">
+                <div class="message-box">
+                    <h2 id="result-title">Game Over</h2>
+                    <button id="restart-btn" class="action-btn">Try Again</button>
+                </div>
+            </div>
+        </main>
+        
+        <p class="controls-hint">Drag or use Arrow Keys to move</p>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
