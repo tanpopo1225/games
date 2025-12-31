@@ -1,26 +1,52 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>クラシックタイルパズル</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Classic Tile Puzzle</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="settings">
-        <label for="difficulty">難易度:</label>
-        <select id="difficulty">
-            <option value="3">3x3</option>
-            <option value="4" selected>4x4</option>
-            <option value="5">5x5</option>
-        </select>
-        <button id="start-button">スタート</button>
+    <div class="app-container">
+        <header class="game-header">
+            <h1 class="game-title">Tile Puzzle</h1>
+            <div class="stats-panel">
+                <div class="stat-box">
+                    <span class="icon">👣</span>
+                    <span id="move-count">0</span>
+                </div>
+                <div class="stat-box">
+                    <span class="icon">⏱️</span>
+                    <span id="time-elapsed">0</span>
+                </div>
+            </div>
+            
+            <div class="controls">
+                <div class="select-wrapper">
+                    <select id="difficulty" class="styled-select">
+                        <option value="3">3 x 3</option>
+                        <option value="4" selected>4 x 4</option>
+                        <option value="5">5 x 5</option>
+                    </select>
+                </div>
+                <button id="start-button" class="action-btn">New Game</button>
+            </div>
+        </header>
+
+        <main class="game-board-wrapper">
+            <div class="puzzle-container" id="puzzle-container"></div>
+        </main>
     </div>
-    <div class="game-info">
-        <p id="move-count">移動数: 0</p>
-        <p id="time-elapsed">時間: 0秒</p>
+    <div id="result-modal" class="modal hidden">
+        <div class="modal-content">
+            <h2 id="result-title">Puzzle Solved!</h2>
+            <p id="result-message">Great job!</p>
+            <button id="modal-restart-btn" class="action-btn">Play Again</button>
+        </div>
     </div>
-    <div class="puzzle-container" id="puzzle-container"></div>
     <script src="script.js"></script>
 </body>
 </html>
