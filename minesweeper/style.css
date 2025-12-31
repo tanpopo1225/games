@@ -1,0 +1,330 @@
+:root {
+    --bg-color: #1a1a2e;
+    --container-bg: #16213e;
+    --accent-color: #0f3460;
+    --primary-color: #e94560;
+    --text-color: #eeeeee;
+    --cell-covered: #2a2a40;
+    --cell-revealed: #e0e0e0;
+    --cell-hover: #3a3a55;
+    --shadow-color: rgba(0, 0, 0, 0.5);
+    --font-family: 'Outfit', sans-serif;
+    
+    --color-1: #3b82f6;
+    --color-2: #10b981;
+    --color-3: #ef4444;
+    --color-4: #8b5cf6;
+    --color-5: #f59e0b;
+    --color-6: #14b8a6;
+    --color-7: #000000;
+    --color-8: #6b7280;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    user-select: none;
+}
+
+body {
+    font-family: var(--font-family);
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.app-container {
+    background-color: var(--container-bg);
+    padding: 2rem;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px var(--shadow-color);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+    max-width: 100%;
+    width: 600px; /* Limit max width for logic */
+}
+
+/* Scroll container for the board */
+.game-board-container {
+    width: 100%;
+    overflow: auto;
+    display: flex;
+    /* margin: auto on the child element handles centering safely with overflow */
+    
+    /* Custom scrollbar for webkit */
+    scrollbar-width: thin;
+    scrollbar-color: var(--primary-color) var(--bg-color);
+}
+
+.game-title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    letter-spacing: -1px;
+    background: linear-gradient(45deg, var(--primary-color), #ff9a9e);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 0.5rem;
+}
+
+.controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 1rem;
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 12px;
+}
+
+.stat-box {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+.reset-button {
+    background: var(--primary-color);
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    font-size: 1.5rem;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(233, 69, 96, 0.4);
+    transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.reset-button:hover {
+    transform: scale(1.1);
+}
+
+.reset-button:active {
+    transform: scale(0.95);
+}
+
+.difficulty-selector {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 1rem;
+    flex-wrap: wrap; /* Allow wrapping on small screens */
+    justify-content: center;
+}
+
+.difficulty-btn {
+    background: transparent;
+    border: 2px solid var(--accent-color);
+    color: var(--text-color);
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: inherit;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.difficulty-btn.active, .difficulty-btn:hover {
+    background: var(--accent-color);
+    border-color: var(--primary-color);
+}
+
+.icon-btn {
+    background: transparent;
+    border: 2px solid var(--accent-color);
+    color: var(--text-color);
+    padding: 8px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1.2rem;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.icon-btn.active {
+    background: var(--accent-color);
+    border-color: var(--primary-color);
+}
+
+.icon-btn:not(.active) {
+    opacity: 0.5;
+    filter: grayscale(100%);
+}
+
+#vibration-btn {
+    display: none;
+}
+
+.game-board {
+    display: grid;
+    gap: 4px;
+    background: rgba(0,0,0,0.2);
+    padding: 10px;
+    border-radius: 10px;
+    margin: auto; /* Centers the board, safe for overflow */
+}
+
+.cell {
+    width: 35px;
+    height: 35px;
+    min-width: 35px; /* Ensure cells assume minimum size */
+    min-height: 35px;
+    background-color: var(--cell-covered);
+    border-radius: 4px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    font-weight: 800;
+    font-size: 1.2rem;
+    transition: background-color 0.1s ease, transform 0.1s ease;
+    box-shadow: inset 0 2px 5px rgba(255,255,255,0.05), 0 2px 4px rgba(0,0,0,0.2);
+    
+    /* Prevent double-tap zoom on mobile */
+    touch-action: manipulation; 
+    -webkit-tap-highlight-color: transparent;
+}
+
+.cell:hover {
+    background-color: var(--cell-hover);
+    transform: translateY(-1px);
+}
+
+.cell.revealed {
+    background-color: var(--cell-revealed);
+    box-shadow: inset 0 2px 5px rgba(0,0,0,0.1);
+    transform: none;
+    cursor: default;
+}
+
+.cell.flagged {
+    color: var(--primary-color);
+}
+
+.cell.mine {
+    background-color: var(--primary-color);
+    color: white;
+    animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+}
+
+@keyframes shake {
+    10%, 90% { transform: translate3d(-1px, 0, 0); }
+    20%, 80% { transform: translate3d(2px, 0, 0); }
+    30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+    40%, 60% { transform: translate3d(4px, 0, 0); }
+}
+
+/* Number colors */
+.cell[data-val="1"] { color: var(--color-1); }
+.cell[data-val="2"] { color: var(--color-2); }
+.cell[data-val="3"] { color: var(--color-3); }
+.cell[data-val="4"] { color: var(--color-4); }
+.cell[data-val="5"] { color: var(--color-5); }
+.cell[data-val="6"] { color: var(--color-6); }
+.cell[data-val="7"] { color: var(--color-7); }
+.cell[data-val="8"] { color: var(--color-8); }
+
+/* Modal */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+    backdrop-filter: blur(5px);
+    opacity: 1;
+    transition: opacity 0.3s ease;
+}
+
+.modal.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.modal-content {
+    background: var(--container-bg);
+    padding: 2rem;
+    border-radius: 20px;
+    text-align: center;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    border: 1px solid var(--accent-color);
+}
+
+#result-title {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    color: var(--primary-color);
+}
+
+#modal-restart-btn {
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    margin-top: 1rem;
+    font-weight: 600;
+}
+
+#modal-restart-btn:hover {
+    filter: brightness(1.1);
+}
+
+/* Responsiveness */
+@media (max-width: 600px) {
+    body {
+        padding: 10px;
+        align-items: flex-start; /* Allow scrolling body if needed */
+    }
+
+    .app-container {
+        padding: 1.5rem 1rem;
+        width: 100%;
+    }
+
+    .game-title {
+        font-size: 2rem;
+    }
+
+    .controls {
+        flex-wrap: wrap;
+        gap: 10px;
+        justify-content: center;
+    }
+    
+    .stat-box {
+        background: rgba(0,0,0,0.2);
+        padding: 5px 10px;
+        border-radius: 8px;
+    }
+
+    /* On mobile, keep cells large enough to tap, let the container scroll */
+    .cell {
+        width: 35px;
+        height: 35px;
+        font-size: 1.1rem;
+    }
+    
+    /* Removed .game-board-container override as margin: auto handles it globally now */
+
+    #vibration-btn {
+        display: flex;
+    }
+}
