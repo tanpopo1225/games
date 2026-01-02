@@ -1,0 +1,321 @@
+:root {
+    --bg-color: #1a1a2e;
+    --container-bg: #16213e;
+    --accent-color: #0f3460;
+    --primary-color: #e94560;
+    --secondary-color: #4cc9f0;
+    --text-color: #eeeeee;
+    --board-bg: #2d8f5e; /* Classic green feel but modernized */
+    --board-bg-dark: #1e6d42;
+    --cell-border: rgba(0,0,0,0.1);
+    --stone-black: #1a1a1a;
+    --stone-white: #f5f5f5;
+    --shadow-color: rgba(0, 0, 0, 0.5);
+    --font-family: 'Outfit', sans-serif;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+body {
+    font-family: var(--font-family);
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 10px;
+    height: 100vh; /* Fixed height for app feel */
+    overflow: hidden;
+}
+
+.app-container {
+    background-color: var(--container-bg);
+    padding: 1rem;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px var(--shadow-color);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 500px;
+    height: 95vh;
+    position: relative;
+}
+
+/* Player Areas */
+.player-area {
+    width: 100%;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    background: rgba(0,0,0,0.2);
+    border-radius: 12px;
+    transition: background 0.3s;
+}
+
+.top-player {
+    transform: rotate(180deg); /* Rotate for opponent */
+    margin-bottom: 10px;
+}
+
+.bottom-player {
+    margin-top: 10px;
+}
+
+.player-info {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.player-name {
+    font-weight: 800;
+    font-size: 1.1rem;
+    color: var(--secondary-color);
+}
+
+.score-box {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.5rem;
+    font-weight: 800;
+    padding: 5px 15px;
+    border-radius: 20px;
+    background: rgba(255,255,255,0.05);
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+}
+
+.score-box.active {
+    border-color: var(--primary-color);
+    background: rgba(233, 69, 96, 0.1);
+    box-shadow: 0 0 15px rgba(233, 69, 96, 0.3);
+}
+
+.turn-indicator {
+    font-size: 0.9rem;
+    color: var(--text-color);
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.score-box.active ~ .turn-indicator {
+    opacity: 1;
+    animation: pulse 1.5s infinite;
+}
+
+/* Stone Icons */
+.stone-icon {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: inline-block;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+.stone-icon.black {
+    background: var(--stone-black);
+    border: 1px solid #444;
+}
+
+.stone-icon.white {
+    background: var(--stone-white);
+    border: 1px solid #ddd;
+}
+
+/* Board */
+.game-board-wrapper {
+    width: 100%;
+    aspect-ratio: 1;
+    max-width: 400px; /* Limit size */
+    padding: 10px;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.game-board {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    grid-template-rows: repeat(8, 1fr);
+    gap: 2px;
+    background-color: var(--accent-color);
+    border: 4px solid var(--accent-color);
+    border-radius: 8px;
+    width: 100%;
+    height: 100%;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+}
+
+.cell {
+    background-color: var(--board-bg);
+    position: relative;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Stone on board */
+.stone {
+    width: 80%;
+    height: 80%;
+    border-radius: 50%;
+    position: absolute;
+    transform: scale(0);
+    transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: inset -2px -2px 5px rgba(0,0,0,0.5), 2px 2px 5px rgba(255,255,255,0.2), 0 4px 6px rgba(0,0,0,0.3);
+}
+
+.stone.black {
+    background-color: var(--stone-black);
+    background: radial-gradient(circle at 30% 30%, #444, #000);
+}
+
+.stone.white {
+    background-color: var(--stone-white);
+    background: radial-gradient(circle at 30% 30%, #fff, #ccc);
+}
+
+.stone.placed {
+    transform: scale(1);
+}
+
+.valid-move {
+    width: 15%;
+    height: 15%;
+    background-color: rgba(0,0,0,0.2);
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+.cell:hover .valid-move {
+    background-color: rgba(0,0,0,0.4);
+    width: 25%;
+    height: 25%;
+}
+
+/* Action Button */
+.action-btn {
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 10px 24px;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform 0.1s, filter 0.2s;
+}
+
+.action-btn:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.1);
+}
+
+/* Modal */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+    backdrop-filter: blur(5px);
+}
+
+.modal.hidden {
+    display: none;
+}
+
+.modal-content {
+    background: var(--container-bg);
+    padding: 2rem;
+    border-radius: 20px;
+    text-align: center;
+    width: 80%;
+    max-width: 350px;
+    border: 1px solid var(--primary-color);
+}
+
+.final-score {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    margin: 20px 0;
+    font-size: 2rem;
+    font-weight: 800;
+}
+
+.final-score-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.vs {
+    font-size: 1rem;
+    color: var(--secondary-color);
+}
+
+#result-title {
+    color: var(--primary-color);
+    font-size: 2rem;
+}
+
+#winner-text {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+}
+
+.input-group {
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+.input-group label {
+    display: block;
+    font-size: 0.9rem;
+    color: var(--secondary-color);
+    margin-bottom: 5px;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.2);
+    background: rgba(0,0,0,0.3);
+    color: var(--text-color);
+    font-family: var(--font-family);
+    font-size: 1rem;
+    outline: none;
+}
+
+.input-group input:focus {
+    border-color: var(--secondary-color);
+}
+
+@keyframes pulse {
+    0% { opacity: 0.5; }
+    50% { opacity: 1; }
+    100% { opacity: 0.5; }
+}

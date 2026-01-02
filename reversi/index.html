@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Modern Reversi</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Player 2 (Top, White) - Rotated for opponent -->
+        <div class="player-area top-player">
+            <div class="player-info">
+                <div class="player-name">Player 2</div>
+                <div class="score-box" id="p2-score-box">
+                    <span class="stone-icon white"></span>
+                    <span id="p2-score">2</span>
+                </div>
+                <div class="turn-indicator" id="p2-turn">Thinking...</div>
+            </div>
+        </div>
+
+        <!-- Game Board -->
+        <main class="game-board-wrapper">
+            <div id="game-board" class="game-board"></div>
+            <div id="valid-moves-layer"></div>
+        </main>
+
+        <!-- Player 1 (Bottom, Black) -->
+        <div class="player-area bottom-player">
+            <div class="player-info">
+                <div class="player-name">Player 1</div>
+                <div class="score-box active" id="p1-score-box">
+                    <span class="stone-icon black"></span>
+                    <span id="p1-score">2</span>
+                </div>
+                <div class="turn-indicator" id="p1-turn">Your Turn</div>
+            </div>
+            <button id="reset-btn" class="action-btn">Reset Game</button>
+        </div>
+
+        <!-- Result Modal -->
+        <div id="result-modal" class="modal hidden">
+            <div class="modal-content">
+                <h2 id="result-title">Game Over</h2>
+                <div class="final-score">
+                    <div class="final-score-item">
+                        <span class="stone-icon black"></span>
+                        <span id="final-p1">0</span>
+                    </div>
+                    <div class="vs">vs</div>
+                    <div class="final-score-item">
+                        <span class="stone-icon white"></span>
+                        <span id="final-p2">0</span>
+                    </div>
+                </div>
+                <p id="winner-text">Player 1 Wins!</p>
+                <button id="modal-restart-btn" class="action-btn">Play Again</button>
+            </div>
+        </div>
+        <!-- Name Setup Modal -->
+        <div id="name-setup-modal" class="modal">
+            <div class="modal-content">
+                <h2 id="setup-title">Player Setup</h2>
+                <div class="input-group">
+                    <label for="p1-name-input">Bottom Player</label>
+                    <input type="text" id="p1-name-input" placeholder="Enter name" value="Player 1">
+                </div>
+                <div class="input-group">
+                    <label for="p2-name-input">Top Player</label>
+                    <input type="text" id="p2-name-input" placeholder="Enter name" value="Player 2">
+                </div>
+                <button id="start-game-btn" class="action-btn">Start Game</button>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
