@@ -1,0 +1,320 @@
+:root {
+    --bg-color: #1a1a2e;
+    --container-bg: #16213e;
+    --accent-color: #0f3460;
+    --primary-color: #e94560;
+    --secondary-color: #4cc9f0;
+    --text-color: #eeeeee;
+    --board-bg: #16213e; 
+    --cell-bg: #1f2b4d;
+    --mark-x: #e94560; /* Pinkish Red */
+    --mark-o: #4cc9f0; /* Light Blue */
+    --shadow-color: rgba(0, 0, 0, 0.5);
+    --font-family: 'Outfit', sans-serif;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+body {
+    font-family: var(--font-family);
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 10px;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.app-container {
+    background-color: var(--container-bg);
+    padding: 1rem;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px var(--shadow-color);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 500px;
+    height: 95vh;
+    position: relative;
+}
+
+/* Player Areas */
+.player-area {
+    width: 100%;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    background: rgba(0,0,0,0.2);
+    border-radius: 12px;
+    transition: background 0.3s;
+}
+
+.top-player {
+    transform: rotate(180deg);
+    margin-bottom: 10px;
+}
+
+.bottom-player {
+    margin-top: 10px;
+}
+
+.player-info {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.player-name {
+    font-weight: 800;
+    font-size: 1.1rem;
+    color: var(--text-color);
+}
+
+.score-box {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.5rem;
+    font-weight: 800;
+    padding: 5px 15px;
+    border-radius: 20px;
+    background: rgba(255,255,255,0.05);
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+}
+
+.score-box.active {
+    background: rgba(255,255,255,0.1);
+    box-shadow: 0 0 15px rgba(255,255,255,0.1);
+}
+
+#p1-score-box.active {
+    border-color: var(--mark-x);
+    box-shadow: 0 0 15px rgba(233, 69, 96, 0.3);
+}
+
+#p2-score-box.active {
+    border-color: var(--mark-o);
+    box-shadow: 0 0 15px rgba(76, 201, 240, 0.3);
+}
+
+.turn-indicator {
+    font-size: 0.9rem;
+    color: var(--text-color);
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.score-box.active ~ .turn-indicator {
+    opacity: 1;
+    animation: pulse 1.5s infinite;
+}
+
+/* Mark Icons for Scoreboard */
+.mark-icon {
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+    position: relative;
+}
+
+.mark-icon.cross::before, .mark-icon.cross::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 3px;
+    background-color: var(--mark-x);
+    top: 50%;
+    left: 0;
+    border-radius: 2px;
+}
+.mark-icon.cross::before { transform: rotate(45deg); }
+.mark-icon.cross::after { transform: rotate(-45deg); }
+
+.mark-icon.circle {
+    border: 3px solid var(--mark-o);
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+}
+
+/* Board */
+.game-board-wrapper {
+    width: 100%;
+    aspect-ratio: 1;
+    max-width: 400px;
+    padding: 10px;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.game-board {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    gap: 10px;
+    background-color: transparent;
+    width: 100%;
+    height: 100%;
+}
+
+.cell {
+    background-color: var(--cell-bg);
+    border-radius: 15px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 0; /* Hide text if any */
+    position: relative;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+    transition: background-color 0.2s;
+}
+
+.cell:active {
+    transform: scale(0.95);
+}
+
+/* Marks on board */
+.mark {
+    position: absolute;
+    width: 60%;
+    height: 60%;
+    animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.mark.cross::before, .mark.cross::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 10px;
+    background-color: var(--mark-x);
+    top: 50%;
+    left: 0;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(233, 69, 96, 0.5);
+}
+.mark.cross::before { transform: rotate(45deg); }
+.mark.cross::after { transform: rotate(-45deg); }
+
+.mark.circle {
+    border: 10px solid var(--mark-o);
+    border-radius: 50%;
+    width: 80%;
+    height: 80%;
+    box-shadow: 0 0 10px rgba(76, 201, 240, 0.5), inset 0 0 10px rgba(76, 201, 240, 0.5);
+}
+
+/* Action Button */
+.action-btn {
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 10px 24px;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform 0.1s, filter 0.2s;
+}
+
+.action-btn:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.1);
+}
+
+/* Modal */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+    backdrop-filter: blur(5px);
+}
+
+.modal.hidden {
+    display: none;
+}
+
+.modal-content {
+    background: var(--container-bg);
+    padding: 2rem;
+    border-radius: 20px;
+    text-align: center;
+    width: 80%;
+    max-width: 350px;
+    border: 1px solid var(--primary-color);
+}
+
+#result-title {
+    color: var(--primary-color);
+    font-size: 2rem;
+    margin-bottom: 20px;
+}
+
+#winner-text {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+}
+
+/* Inputs */
+.input-group {
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+.input-group label {
+    display: block;
+    font-size: 0.9rem;
+    color: var(--secondary-color);
+    margin-bottom: 5px;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.2);
+    background: rgba(0,0,0,0.3);
+    color: var(--text-color);
+    font-family: var(--font-family);
+    font-size: 1rem;
+    outline: none;
+}
+
+.input-group input:focus {
+    border-color: var(--secondary-color);
+}
+
+@keyframes pulse {
+    0% { opacity: 0.5; }
+    50% { opacity: 1; }
+    100% { opacity: 0.5; }
+}
+
+@keyframes popIn {
+    0% { transform: scale(0); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+}
