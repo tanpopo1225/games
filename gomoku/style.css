@@ -1,0 +1,312 @@
+:root {
+    --bg-color: #1a1a2e;
+    --container-bg: #16213e;
+    --accent-color: #0f3460;
+    --primary-color: #e94560;
+    --secondary-color: #4cc9f0;
+    --text-color: #eeeeee;
+    
+    --board-bg: #f0d9b5; /* Slightly wooden/warm tint for contrast or maybe dark? Let's go dark modern first, or maybe warm for visibility. Actually, standard Gomoku is on wood. Let's try a stylized dark wood or synthetic dark surface. */
+    --board-color: #252a34; /* Dark board */
+    --grid-line: rgba(255, 255, 255, 0.1);
+    
+    --stone-black: #1a1a1a;
+    --stone-white: #f0f0f0;
+    
+    --font-family: 'Outfit', sans-serif;
+    --cell-size: 30px; /* Base size, responsive */
+    --gap: 0px;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+body {
+    font-family: var(--font-family);
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 10px;
+    overflow: hidden; /* Prevent scroll on mobile if possible */
+}
+
+.app-container {
+    background-color: var(--container-bg);
+    padding: 1rem;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 500px;
+    height: 95vh;
+    position: relative;
+    gap: 10px;
+}
+
+/* Player Areas */
+.player-area {
+    width: 100%;
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    background: rgba(0,0,0,0.2);
+    border-radius: 12px;
+    transition: all 0.3s;
+    border: 2px solid transparent;
+}
+
+.player-area.active {
+    background: rgba(233, 69, 96, 0.1);
+    border-color: var(--primary-color);
+    box-shadow: 0 0 15px rgba(233, 69, 96, 0.2);
+}
+
+.top-player {
+    transform: rotate(180deg);
+    margin-bottom: 5px;
+}
+
+.bottom-player {
+    margin-top: 5px;
+}
+
+.player-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    flex: 1;
+}
+
+.player-name {
+    font-weight: 800;
+    font-size: 1.2rem;
+    color: var(--secondary-color);
+}
+
+.turn-indicator {
+    font-size: 0.9rem;
+    color: var(--text-color);
+    opacity: 0.5;
+    transition: opacity 0.3s;
+}
+
+.player-area.active .turn-indicator {
+    opacity: 1;
+    font-weight: bold;
+    color: var(--primary-color);
+    animation: pulse 1.5s infinite;
+}
+
+.stone-icon {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.stone-icon.large {
+    width: 40px;
+    height: 40px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.4);
+}
+
+.stone-icon.black {
+    background: radial-gradient(circle at 30% 30%, #444, #000);
+    border: 2px solid rgba(255,255,255,0.1);
+}
+
+.stone-icon.white {
+    background: radial-gradient(circle at 30% 30%, #fff, #bbb);
+    border: 2px solid rgba(0,0,0,0.1);
+}
+
+/* Board */
+.board-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex: 1;
+    padding: 5px;
+}
+
+.game-board {
+    display: grid;
+    grid-template-columns: repeat(15, 1fr);
+    grid-template-rows: repeat(15, 1fr);
+    background-color: var(--board-color);
+    width: min(90vw, 400px);
+    height: min(90vw, 400px);
+    border: 2px solid #555;
+    position: relative;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+.cell {
+    position: relative;
+    border-right: 1px solid var(--grid-line);
+    border-bottom: 1px solid var(--grid-line);
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Remove outer borders for cleaner look or keep them? */
+.cell:nth-child(15n) { border-right: none; }
+.cell:nth-last-child(-n+15) { border-bottom: none; }
+
+/* Grid intersection dots (Hoshi) - Optional, simplified for now */
+
+.stone {
+    width: 80%;
+    height: 80%;
+    border-radius: 50%;
+    box-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+    transform: scale(0);
+    transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.stone.placed {
+    transform: scale(1);
+}
+
+.stone.black {
+    background: radial-gradient(circle at 30% 30%, #444, #000);
+}
+
+.stone.white {
+    background: radial-gradient(circle at 30% 30%, #fff, #bbb);
+}
+
+.stone.last-move::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 30%;
+    height: 30%;
+    border-radius: 50%;
+    background-color: var(--primary-color);
+    opacity: 0.8;
+}
+
+/* Hover effect */
+.cell:hover .stone-preview {
+    opacity: 0.5;
+    transform: scale(0.8);
+}
+
+.stone-preview {
+    width: 80%;
+    height: 80%;
+    border-radius: 50%;
+    position: absolute;
+    opacity: 0;
+    transition: opacity 0.2s;
+    pointer-events: none;
+}
+
+.stone-preview.black { background-color: var(--stone-black); }
+.stone-preview.white { background-color: var(--stone-white); }
+
+/* Controls */
+.control-btn {
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 10px 24px;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform 0.1s, filter 0.2s;
+    font-family: var(--font-family);
+}
+
+.small-btn {
+    padding: 8px 16px;
+    font-size: 0.9rem;
+    width: auto;
+}
+
+.control-btn:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.1);
+}
+
+.control-btn.secondary {
+    background-color: rgba(255,255,255,0.1);
+    color: var(--text-color);
+}
+
+.control-btn.secondary:hover {
+    background-color: rgba(255,255,255,0.2);
+}
+
+/* Modal */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+    backdrop-filter: blur(5px);
+}
+
+.modal.hidden {
+    display: none;
+}
+
+.modal-content {
+    background: var(--container-bg);
+    padding: 2rem;
+    border-radius: 20px;
+    text-align: center;
+    border: 1px solid rgba(255,255,255,0.1);
+    width: 90%;
+    max-width: 350px;
+    animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes popIn {
+    from { transform: scale(0.8); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+.modal-content h2 {
+    color: var(--primary-color);
+    margin-bottom: 10px;
+    font-size: 2rem;
+}
+
+.modal-content p {
+    margin-bottom: 20px;
+    font-size: 1.2rem;
+    opacity: 0.9;
+}
+
+@keyframes pulse {
+    0% { opacity: 0.5; }
+    50% { opacity: 1; }
+    100% { opacity: 0.5; }
+}
